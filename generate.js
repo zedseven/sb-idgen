@@ -20,6 +20,7 @@ function generateUserID() {
 
 async function digestMessage(message) {
 	const msgUint8 = new TextEncoder().encode(message); // encode as (utf-8)
+	console.debug(msgUint8);
 	const hashBuffer = await crypto.subtle.digest("SHA-256", msgUint8); // hash the message
 	const hashArray = Array.from(new Uint8Array(hashBuffer)); // buffer to byte array
 	const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // bytes to hex string
@@ -27,9 +28,12 @@ async function digestMessage(message) {
 }
 
 async function multiHash(input, times = 5000) {
+	console.debug('Start: "' + input + '"');
 	for (let i = 0; i < times; i++) {
+		console.debug(i + ': "' + input + '"');
 		input = await digestMessage(input);
 	}
+	console.debug('End: "' + input + '"');
 	return input;
 }
 
